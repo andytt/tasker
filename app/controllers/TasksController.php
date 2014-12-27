@@ -4,7 +4,9 @@ class TasksController extends BaseController
 {
     public function __construct()
     {
-        $this->beforeFilter('auth');
+        $this->beforeFilter('auth', [
+            'except' => ['index']
+        ]);
     }
 
     public function index()

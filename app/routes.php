@@ -17,9 +17,9 @@ Route::get('tasks/quadrant/{quadrant}', 'TasksController@indexByQuadrant');
 Route::resource('tasks', 'TasksController');
 
 // Confide routes
-Route::get('users/create', 'UsersController@create');
+// Route::get('users/create', 'UsersController@create');
 Route::post('users', 'UsersController@store');
-Route::get('users/login', 'UsersController@login');
+// Route::get('users/login', 'UsersController@login');
 Route::post('users/login', 'UsersController@doLogin');
 Route::get('users/confirm/{code}', 'UsersController@confirm');
 Route::get('users/forgot_password', 'UsersController@forgotPassword');

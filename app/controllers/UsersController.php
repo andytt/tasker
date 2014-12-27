@@ -15,10 +15,10 @@ class UsersController extends Controller
      *
      * @return  Illuminate\Http\Response
      */
-    public function create()
-    {
-        return View::make(Config::get('confide::signup_form'));
-    }
+    // public function create()
+    // {
+    //     return View::make(Config::get('confide::signup_form'));
+    // }
 
     /**
      * Stores new account
@@ -44,7 +44,7 @@ class UsersController extends Controller
                 );
             }
 
-            return Redirect::action('UsersController@login')
+            return Redirect::to('/')
                 ->with('notice', Lang::get('confide::confide.alerts.account_created'));
         } else {
             $error = $user->errors()->all(':message');
@@ -60,14 +60,15 @@ class UsersController extends Controller
      *
      * @return  Illuminate\Http\Response
      */
-    public function login()
-    {
-        if (Confide::user()) {
-            return Redirect::to('/');
-        } else {
-            return View::make(Config::get('confide::login_form'));
-        }
-    }
+    // public function login()
+    // {
+    //     // return Redirect::to('/');
+    //     // if (Confide::user()) {
+    //     //     return Redirect::to('/');
+    //     // } else {
+    //     //     return View::make(Config::get('confide::login_form'));
+    //     // }
+    // }
 
     /**
      * Attempt to do login
