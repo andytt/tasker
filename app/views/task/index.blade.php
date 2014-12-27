@@ -86,11 +86,11 @@
             position: absolute;
             top: auto;
             bottom: 0;
-            left: auto;
+            left: 0;
             right: 0;
             background-color: #F0ED8C;
             border-top: 0;
-            width: 50%;
+            width: 100%;
         }
 
         .task-btn, .task:focus {
