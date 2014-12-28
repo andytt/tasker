@@ -36,6 +36,29 @@
         });
         loadTasks();
 
+        /* Global Helpers */
+        $('.global-helper-container').children().hide();
+        $('.btn-global-helper-expand').show();
+
+        $('.btn-global-helper-expand').on('click', function (e) {
+            e.preventDefault();
+            $(this).hide().siblings().show();
+        });
+
+        $('.btn-global-helper-compress').on('click', function (e) {
+            e.preventDefault();
+            $(this).hide().siblings().hide();
+            $('.btn-global-helper-expand').show();
+        });
+
+        $('.btn-global-helper-question').on('click', function (e) {
+            e.preventDefault();
+            window.introJs().setOptions({
+                showProgress: false,
+                showStepNumbers: false
+            }).start();
+        });
+
         /* Quadrant Events */
         $('.quadrant')
         .on('mouseover', function () {
