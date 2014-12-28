@@ -279,6 +279,7 @@
         <button class="btn btn-global-helper-expand"><i class="fa fa-expand"></i></button>
 
         <button class="btn btn-global-helper-question"><i class="fa fa-question-circle"></i></button>
+        <button class="btn" data-toggle="modal" data-target=".modal-logout-confirm"><i class="fa fa-sign-out"></i></button>
     </div>
 
     <!-- Tasks -->
@@ -305,6 +306,7 @@
 
     <!-- Modals -->
     @include('task.addTaskModal')
+    @include('user.logoutConfirmModal')
     @if (Auth::guest())
         @include('user.loginModal')
         @include('user.signupModal')
