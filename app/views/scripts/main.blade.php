@@ -58,13 +58,14 @@
 
         /* Quadrant Events */
         $('.quadrant')
-        .on('mouseover', function () {
+        .on('mouseenter', function () {
+            console.log('hi');
             /* Show toolbar of current quadrant */
             $(this).find('.task-container-toolbar').show('fast');
 
             /* Bind mouse events on each task */
             $(this).find('.task')
-            .on('mouseover', function () {
+            .on('mouseenter', function () {
                 $(this).draggable({
                     scope: 'task',
                     helper: 'clone',
@@ -125,7 +126,7 @@
         })
         .on('mouseleave', function () {
             /* Unbind mouse events on each task */
-            $(this).find('.task').off('mouseover').off('mouseleave');
+            $(this).find('.task').off('mouseenter').off('mouseleave');
 
             /* Hide toolbar of current quadrant */
             $(this).find('.task-container-toolbar').hide('fast');
