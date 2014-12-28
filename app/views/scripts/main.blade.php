@@ -59,7 +59,6 @@
         /* Quadrant Events */
         $('.quadrant')
         .on('mouseenter', function () {
-            console.log('hi');
             /* Show toolbar of current quadrant */
             $(this).find('.task-container-toolbar').show('fast');
 
