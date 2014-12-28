@@ -187,14 +187,6 @@
             border-radius: 100px;
         }
 
-        .global-helper-container .btn-global-helper-expand {
-
-        }
-
-        .global-helper-container .btn-global-helper-compress {
-            display: none;
-        }
-
         .global-helper-container .btn {
             background-color: #fff;
             color: #000;
@@ -285,7 +277,6 @@
     <!-- Global Helper -->
     <div class="global-helper-container">
         <button class="btn btn-global-helper-expand"><i class="fa fa-expand"></i></button>
-        <button class="btn btn-global-helper-compress"><i class="fa fa-compress"></i></button>
 
         <button class="btn btn-global-helper-question"><i class="fa fa-question-circle"></i></button>
     </div>

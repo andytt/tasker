@@ -40,23 +40,20 @@
         $('.global-helper-container').children().hide();
         $('.btn-global-helper-expand').show();
 
-        $('.btn-global-helper-expand').on('click', function (e) {
-            e.preventDefault();
-            $(this).hide('fast').siblings().show('fast');
-        });
+        $('.global-helper-container').on('mouseenter', function () {
+            $(this).find('button').show('fast').filter('.btn-global-helper-expand').hide('fast');
 
-        $('.btn-global-helper-compress').on('click', function (e) {
-            e.preventDefault();
-            $(this).hide('fast').siblings().hide('fast');
-            $('.btn-global-helper-expand').show('fast');
-        });
+            $(this).find('.btn-global-helper-question').on('click', function (e) {
+                e.preventDefault();
+                window.introJs().setOptions({
+                    showProgress: false,
+                    showStepNumbers: false
+                }).start();
+            });
+        }).on('mouseleave', function () {
+            $(this).find('button').hide('fast').filter('.btn-global-helper-expand').show('fast');
 
-        $('.btn-global-helper-question').on('click', function (e) {
-            e.preventDefault();
-            window.introJs().setOptions({
-                showProgress: false,
-                showStepNumbers: false
-            }).start();
+            $(this).find('.btn-global-helper-question').off('click');
         });
 
         /* Quadrant Events */
