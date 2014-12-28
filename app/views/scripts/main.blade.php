@@ -42,13 +42,13 @@
 
         $('.btn-global-helper-expand').on('click', function (e) {
             e.preventDefault();
-            $(this).hide().siblings().show();
+            $(this).hide('fast').siblings().show('fast');
         });
 
         $('.btn-global-helper-compress').on('click', function (e) {
             e.preventDefault();
-            $(this).hide().siblings().hide();
-            $('.btn-global-helper-expand').show();
+            $(this).hide('fast').siblings().hide('fast');
+            $('.btn-global-helper-expand').show('fast');
         });
 
         $('.btn-global-helper-question').on('click', function (e) {
