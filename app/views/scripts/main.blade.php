@@ -4,17 +4,188 @@
 
     $(function () {
         /* Initialization */
-        $(window).on('resize', (function initNanoScroller() {
-            var halfHeight = ($(window).outerHeight(true) - parseInt($('#quadrant-2').css('border-bottom-width'), 10)) / 2;
-            $('.quadrant').height(halfHeight);
+        windowOnResizeHandler();
+        loadTasks();
+        initGlobalHelpers();
+        initDatepicker($('.datepicker'));
+        initTaskDroppable();
+        listenOnAddTaskBtn();
+        $(window).on('resize', windowOnResizeHandler);
+        $(document)
+        .on('mouseenter', '.task', taskOnEnterHandler)
+        .on('mouseleave', '.task', taskOnLeaveHandler);
 
-            $('.nano').nanoScroller({
-                iOSNativeScrolling: true,
-                preventPageScrolling: true
+        /* Global Helpers */
+        var globalHelperContainer = $('.global-helper-container');
+
+        $('.js-btn-expand-global-helper').on('click', function (e) {
+            e.preventDefault();
+
+            globalHelperContainer.children().show();
+            globalHelperContainer.find('.js-btn-expand-global-helper').hide();
+
+            $('<div class="global-helper-backdrop"/>').insertAfter(globalHelperContainer).on('click', function (e) {
+                e.preventDefault();
+                $(this).remove();
+
+                globalHelperContainer.children().hide();
+                globalHelperContainer.find('.js-btn-expand-global-helper').show();
             });
+        });
 
-            return initNanoScroller;
-        })());
+        $('.js-btn-collapse-global-helper').on('click', function (e) {
+            e.preventDefault();
+
+            globalHelperContainer.children().hide();
+            globalHelperContainer.find('.js-btn-expand-global-helper').show();
+
+            $('.global-helper-backdrop').remove();
+        });
+
+        $('.js-btn-start-intro').on('click', function (e) {
+            e.preventDefault();
+
+            window.introJs().setOptions({
+                showProgress: false,
+                showStepNumbers: false
+            }).start();
+        });
+    });
+
+    /* Methods */
+    function insertTask(task) {
+        var $dest = $('#quadrant-' + task.quadrant).find('.task-container'),
+            tpl = _.template($('#tpl-task').html());
+
+        task['colorClass'] = 'red';
+
+        if (2 == task.quadrant) { task['colorClass'] = 'green'; }
+        else if (3 == task.quadrant) { task['colorClass'] = 'white'; }
+        else if (4 == task.quadrant) { task['colorClass'] = 'grey'; }
+
+
+        $dest.append(tpl(task));
+    }
+
+    function loadTasks() {
+        $.getJSON('/tasks', function (tasks) {
+            _.forEach(tasks, function (task) {
+                insertTask(task);
+            });
+        });
+    }
+
+    function loadTask(taskId) {
+        $.getJSON('/tasks/' + taskId, function (task) {
+            insertTask(task);
+        });
+    }
+
+    function listenOnAddTaskBtn()
+    {
+        $('.js-btn-add-task').off('click').on('click', function (e) {
+            var modalAddTask = $('#modal-add-task');
+            modalAddTask.openModal();
+
+            modalAddTask.find('form').off('submit').on('submit', function (e) {
+                e.preventDefault();
+
+                var task = {};
+
+                /* Collect task infos */
+                $(this).serializeArray().forEach(function (input) {
+                    task[input.name] = input.value;
+                });
+
+                /* Submit (AJAX) task */
+                createTask(task).then(function (task) {
+                    insertTask(task);
+                    modalAddTask.closeModal();
+                });
+            });
+        });
+    }
+
+    function taskOnEnterHandler(e) {
+        e.preventDefault();
+
+        var $thisTask = $(this);
+
+        $thisTask.find('.task-footer').show('fast');
+
+        /* Init draggable */
+        $thisTask.draggable({
+            scope: 'task',
+            helper: 'clone',
+            revert: 'invalid',
+            appendTo: 'body',
+            create: function (e, ui) {
+                $(this).css('min-width', '200px');
+            },
+            start: function () {
+                $('<div class="global-helper-backdrop"/>').insertAfter($(this));
+                $('.global-helper-container').hide();
+            },
+            stop: function () {
+                $('.global-helper-backdrop').remove();
+                $('.global-helper-container').show();
+            }
+        });
+
+        $thisTask.find('.js-task-delete').off('click').on('click', function (e) {
+            e.preventDefault();
+
+            var taskId = $thisTask.attr('data-task-id');
+
+            $.ajax('/tasks/' + taskId, {
+                method: 'DELETE'
+            }).then(function () {
+                $thisTask.hide('fast', function () {
+                    $thisTask.remove();
+                });
+            });
+        });
+    }
+
+    function taskOnLeaveHandler(e) {
+        e.preventDefault();
+
+        var $thisTask = $(this);
+
+        $thisTask.find('.task-footer').hide('fast');
+
+        /* Remove style that create when task dragged */
+        $thisTask.removeAttr('style');
+
+        /* Unbind draggable */
+        if (($thisTask).draggable('instance') !== undefined) {
+            $thisTask.draggable('destroy');
+        }
+    }
+
+    function createTask(task) {
+        return $.post('/tasks', task);
+    }
+
+    function initDatepicker($target) {
+        $target.pickadate({
+            container: 'body',
+            format: 'yyyy-mm-dd'
+        });
+    }
+
+    function windowOnResizeHandler() {
+        var halfHeight = ($(window).outerHeight(true)) / 2;
+
+        $('.quadrant').height(halfHeight);
+
+        $('.nano').nanoScroller({
+            iOSNativeScrolling: true,
+            preventPageScrolling: true
+        });
+    }
+
+    function initTaskDroppable() {
         $('.quadrant').droppable({
             scope: 'task',
             drop: function (e, ui) {
@@ -28,164 +199,18 @@
                     }
                 }).then(function () {
                     loadTask(taskId);
-                    ui.draggable.parent().hide('fast', function () {
+                    ui.draggable.hide('fast', function () {
                         $(this).remove();
                     });
                 }.bind(this));
             }
         });
-        loadTasks();
-
-        /* Global Helpers */
-        $('.global-helper-container').children().hide();
-        $('.btn-global-helper-expand').show();
-
-        $('.global-helper-container').on('mouseenter', function () {
-            $(this).find('button').show('fast').filter('.btn-global-helper-expand').hide('fast');
-
-            $(this).find('.btn-global-helper-question').on('click', function (e) {
-                e.preventDefault();
-                window.introJs().setOptions({
-                    showProgress: false,
-                    showStepNumbers: false
-                }).start();
-            });
-        }).on('mouseleave', function () {
-            $(this).find('button').hide('fast').filter('.btn-global-helper-expand').show('fast');
-
-            $(this).find('.btn-global-helper-question').off('click');
-        });
-
-        /* Quadrant Events */
-        $('.quadrant')
-        .on('mouseenter', function () {
-            /* Show toolbar of current quadrant */
-            $(this).find('.task-container-toolbar').show('fast');
-
-            /* Bind mouse events on each task */
-            $(this).find('.task')
-            .on('mouseenter', function () {
-                $(this).draggable({
-                    scope: 'task',
-                    helper: 'clone',
-                    revert: 'invalid',
-                    appendTo: 'body',
-                    create: function () {
-                        $(this).css('width', $(this).outerWidth());
-                    }
-                });
-
-                /* Show footer of current task */
-                $(this).find('.task-footer').show('fast');
-
-                /* Bind events on footer of current task */
-                $(this).find('.task-btn-complete').off('click').on('click', function () {
-                    var taskId = $(this).attr('data-task-id');
-
-                    $.ajax('/tasks/' + taskId, {
-                        method: 'PUT',
-                        data: {
-                            complete: true
-                        }
-                    }).then(function () {
-                        $(this).closest('.task').parent().hide('fast', function () {
-                            $(this).remove();
-                        });
-                    }.bind(this));
-                });
-
-                /* Bind events on footer of current task */
-                $(this).find('.task-btn-destroy').off('click').on('click', function () {
-                    var taskId = $(this).attr('data-task-id');
-
-                    $.ajax('/tasks/' + taskId, {
-                        method: 'DELETE'
-                    }).then(function () {
-                        $(this).closest('.task').parent().hide('fast', function () {
-                            $(this).remove();
-                        });
-                    }.bind(this));
-                });
-            })
-            .on('mouseleave', function () {
-                $(this).removeAttr('style');
-                if ($(this).draggable('instance') !== undefined) {
-                    $(this).draggable('destroy');
-                }
-
-                /* Unbind events on footer of current task */
-                $(this).find('.task-btn-complete').off('click');
-
-                /* Unbind events on footer of current task */
-                $(this).find('.task-btn-destroy').off('click');
-
-                /* Hide footer of current task */
-                $(this).find('.task-footer').hide('fast');
-            });
-        })
-        .on('mouseleave', function () {
-            /* Unbind mouse events on each task */
-            $(this).find('.task').off('mouseenter').off('mouseleave');
-
-            /* Hide toolbar of current quadrant */
-            $(this).find('.task-container-toolbar').hide('fast');
-        });
-
-        /* Modal Events */
-        $('.modal-add-task')
-        .on('show.bs.modal', function (e) {
-            var $modal = $(this),
-                $button = $(e.relatedTarget);
-
-            $modal.find('form').on('submit', function (e) {
-                e.preventDefault();
-
-                var task = {};
-
-                /* Collect task infos */
-                $(this).serializeArray().forEach(function (input) {
-                    task[input.name] = input.value;
-                });
-
-                /* Collect task quadrant */
-                task['quadrant'] = parseInt($button.attr('data-quadrant'), 10);
-
-                /* Submit (AJAX) task */
-                $.post('/tasks', task, function (task) {
-                    insertTask(task);
-                    $modal.modal('hide');
-                }, 'JSON');
-            });
-        })
-        .on('hide.bs.modal', function (e) {
-            var $modal = $(this);
-
-            $modal.find('form').off('submit');
-        });
-    });
-
-    function insertTask(task) {
-        var $dest = $('#quadrant-' + task.quadrant).find('.task-container');
-
-        $.get('/tasks/' + task.id, function (task) {
-            $dest.append(task);
-        }, 'html');
     }
 
-    function loadTasks() {
-        for (var i = 1; i <= 4; i++) {
-            $.getJSON('/tasks/quadrant/' + i, function (tasks) {
-                tasks.forEach(function (task) {
-                    insertTask(task);
-                });
-            });
-        }
-    }
-
-    function loadTask(taskId) {
-        $.getJSON('/tasks/' + taskId, function (task) {
-            insertTask(task);
-        });
+    function initGlobalHelpers() {
+        var globalHelperContainer = $('.global-helper-container');
+        globalHelperContainer.children().hide();
+        globalHelperContainer.find('.js-btn-expand-global-helper').show();
     }
 })(window.jQuery, document, window);
 </script>

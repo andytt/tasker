@@ -3,45 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Tasker</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/materialize/dist/css/materialize.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.4/css/nanoscroller.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/intro.js/1.0.0/introjs.min.css">
     <style>
-        body {
-            background-color: #000;
-        }
-
-        body:before, body::before {
-            content: " ";
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            opacity: .2;
-            background-color: #fff;
-        }
-
-        .modal-login-form .modal-content, .modal-signup-form .modal-content {
-            background-color: #F0ED8C;
-        }
-
-        .modal-login-form input, .modal-signup-form input {
-            border: 0;
-        }
-
-        .modal-login-form button, .modal-signup-form button {
-            background-color: #F0ED8C;
-            border: 0;
-            color: #7B770C;
-            outline: none;
-        }
-
-        .modal-login-form .bg-info {
-            border-radius: 30px;
+        .fullpage-row {
+            margin: 0;
         }
 
         .task-container {
@@ -49,156 +17,73 @@
             padding: 10px;
         }
 
-        .task-container-toolbar {
-            display: none;
-            position: absolute;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            top: auto;
-            bottom: 10px;
-            background-color: #83826C;
-            border-radius: 5px;
-            opacity: .8;
-        }
-
-        .task-container-toolbar .btn {
-            background-color: transparent;
-            border: 0;
-            color: #fff;
-        }
-
         .task {
             position: relative;
-            background-color: #F0ED8C;
-        }
-
-        .task-heading {
-            background-color: #F0ED8C;
-        }
-
-        .task-title {
-        }
-
-        .task-description {
         }
 
         .task-footer {
             display: none;
             position: absolute;
-            top: auto;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #F0ED8C;
-            border-top: 0;
-            width: 100%;
-        }
-
-        .task-btn, .task:focus {
-            background-color: #F0ED8C;
-            border: 0;
-            color: #7B770C;
-            outline: none;
-        }
-
-        .modal-add-task .modal-content {
-            background-color: #F0ED8C;
-        }
-
-        .modal-add-task input {
-            border: 0;
-        }
-
-        .modal-add-task button {
-            background-color: #F0ED8C;
-            border: 0;
-            color: #7B770C;
-            outline: none;
-        }
-
-        #quadrant-2 {
-            border: 0;
-        }
-
-        #quadrant-2::after {
-            position: absolute;
-            content: " ";
-            bottom: 0;
-            top: auto;
-            left: auto;
-            right: 0;
-            height: 50%;
-            border-right: 1px solid #fff;
-        }
-
-        #quadrant-2::before {
-            position: absolute;
-            content: " ";
-            bottom: 0;
-            top: auto;
-            left: auto;
-            right: 0;
-            width: 50%;
-            border-bottom: 1px solid #fff;
-        }
-
-        #quadrant-1 {
-            border: 0;
-        }
-
-        #quadrant-1::before {
-            position: absolute;
-            content: " ";
-            bottom: 0;
-            top: auto;
-            left: 0;
-            right: auto;
-            width: 50%;
-            border-bottom: 1px solid #fff;
-        }
-
-        #quadrant-3 {
-            border: 0;
-        }
-
-        #quadrant-3::after {
-            position: absolute;
-            content: " ";
-            bottom: auto;
             top: 0;
-            left: auto;
+            bottom: 0;
+            left: 0;
             right: 0;
-            height: 50%;
-            border-right: 1px solid #fff;
+            background-color: rgba(158, 158, 158, 0.6);
+            width: 100%;
+            height: 100%;
         }
 
-        #quadrant-4 {
+        .task-footer > .row {
+            position: absolute;
+            top: auto;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            text-align: center;
+        }
+
+        .task-footer > .row > a {
+            opacity: .5;
+        }
+
+        .task-footer > .row > a:last-child {
+            margin-right: 0;
+        }
+
+        .task-footer > .row > a:hover {
+            opacity: 1;
+        }
+
+        #quadrant-1, #quadrant-2, #quadrant-3, #quadrant-4 {
             border: 0;
+            outline: 0;
+        }
+
+        .nano > .nano-content:focus {
+            outline: 0;
         }
 
         .global-helper-container {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
             z-index: 1000;
-            background-color: #000;
-            padding: 5px;
-            border-radius: 100px;
         }
 
-        .global-helper-container .btn {
-            background-color: #fff;
-            color: #000;
-            border-radius: 100px;
-        }
-
-        .global-helper-container .btn:hover {
-            color: #000;
-        }
-
-        .global-helper-container .btn:focus {
-            outline: none;
+        .global-helper-backdrop {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-color: #424242;
+            opacity: .5;
+            z-index: 990;
         }
 
         .introjs-helperLayer {
@@ -272,56 +157,61 @@
         }
     </style>
 </head>
-<body class="container-fluid">
+<body class="grey lighten-1">
 
     <!-- Global Helper -->
     <div class="global-helper-container">
-        <button class="btn btn-global-helper-expand"><i class="fa fa-expand"></i></button>
+        <button class="js-btn-expand-global-helper btn-floating btn-large waves-effect waves-light blue"><i class="mdi-action-view-module"></i></button>
 
-        <button class="btn btn-global-helper-question"><i class="fa fa-question-circle"></i></button>
-        <button class="btn" data-toggle="modal" data-target=".modal-logout-confirm"><i class="fa fa-sign-out"></i></button>
+        <button class="js-btn-add-task btn-floating btn-large waves-effect waves-light blue"><i class="mdi-content-add"></i></button>
+        <button class="js-btn-collapse-global-helper btn-floating btn-large waves-effect waves-light blue"><i class="mdi-content-clear"></i></button>
+        <button class="js-btn-start-intro btn-floating btn-large waves-effect waves-light blue"><i class="mdi-action-help"></i></button>
     </div>
 
     <!-- Tasks -->
-    <div class="row">
-        <div id="quadrant-2" class="col-md-6 quadrant" data-quadrant="2" data-intro="Most important and most emergency tasks." data-step="1" data-position="bottom-middle-aligned">
+    <div class="row fullpage-row">
+        <div id="quadrant-1" class="col m6 quadrant" data-quadrant="1" data-intro="Most important and most emergency tasks." data-step="1" data-position="bottom-middle-aligned">
             <div class="nano"><div class="row task-container nano-content"></div></div>
-            @include('task.containerToolbar', ['quadrant' => 2])
         </div>
-        <div id="quadrant-1" class="col-md-6 quadrant" data-quadrant="1" data-intro="Most important but not emergency tasks." data-step="2" data-position="bottom-middle-aligned">
+        <div id="quadrant-2" class="col m6 quadrant" data-quadrant="2" data-intro="Most important but not emergency tasks." data-step="2" data-position="bottom-middle-aligned">
             <div class="nano"><div class="row task-container nano-content"></div></div>
-            @include('task.containerToolbar', ['quadrant' => 1])
         </div>
-    </div>
-    <div class="row">
-        <div id="quadrant-3" class="col-md-6 quadrant" data-quadrant="3" data-intro="Most emergency but not important tasks." data-step="3" data-position="top">
+        <div id="quadrant-3" class="col m6 quadrant" data-quadrant="3" data-intro="Most emergency but not important tasks." data-step="3" data-position="top">
             <div class="nano"><div class="row task-container nano-content"></div></div>
-            @include('task.containerToolbar', ['quadrant' => 3])
         </div>
-        <div id="quadrant-4" class="col-md-6 quadrant" data-quadrant="4" data-intro="Not important and not emergency tasks." data-step="4" data-position="top">
+        <div id="quadrant-4" class="col m6 quadrant" data-quadrant="4" data-intro="Not important and not emergency tasks." data-step="4" data-position="top">
             <div class="nano"><div class="row task-container nano-content"></div></div>
-            @include('task.containerToolbar', ['quadrant' => 4])
         </div>
     </div>
 
     <!-- Modals -->
     @include('task.addTaskModal')
-    @include('user.logoutConfirmModal')
-    @if (Auth::guest())
-        @include('user.loginModal')
-        @include('user.signupModal')
-    @endif
+
+    <!-- Templates -->
+    <script type="text/template" id="tpl-task">
+        <div class="task col m4" data-task-id="<%- id %>" data-quadrant="<%- quadrant %>">
+            <div class="card <%- colorClass %>" data-task-id="<%- id %>">
+                <div class="card-content">
+                    <p class="card-title"><span class="text-grey text-darken-4"><%- summary %></span></p>
+                    <p class="text-grey text-darken-4"><%- description %></p>
+                </div>
+                <div class="task-footer">
+                    <div class="row">
+                        <a href="#" class="grey-text text-darken-4 js-task-delete"><i class="small mdi-action-delete"></i></a>
+                        <a href="#" class="grey-text text-darken-4 js-task-delete"><i class="small mdi-action-done"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.4/javascripts/jquery.nanoscroller.min.js"></script>
     <script src="//cdn.jsdelivr.net/intro.js/1.0.0/intro.min.js"></script>
-    @if (Auth::guest())
-        @include('scripts.popupLoginModal')
-    @else
-        @include('scripts.main')
-    @endif
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="/assets/vendor/materialize/dist/js/materialize.js"></script>
+    @include('scripts.main')
 </body>
 </html>
